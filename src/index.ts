@@ -13,6 +13,8 @@ export interface Env {
 const SERVER_INFO = { name: "infiterra-billing-mcp", version: "1.0.0" };
 const PROTOCOL_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 const MAX_RESULT_CHARS = 100_000;
+// Required on every request to Leader Cloud / Infiterra (token endpoint and API calls).
+const API_VERSION_HEADER = { "X-Api-Version": "3" };
 const TOOL_MAP = new Map<string, ToolDef>(TOOLS.map((t) => [t.name, t]));
 
 type JsonRpcId = string | number | null;
@@ -63,6 +65,7 @@ async function getInfiterraToken(env: Env, force = false): Promise<string> {
   const headers: Record<string, string> = {
     "Content-Type": "application/x-www-form-urlencoded",
     Accept: "application/json",
+    ...API_VERSION_HEADER,
   };
   // Infiterra expects client credentials as HTTP Basic (base64 of "clientId:clientSecret"),
   // matching the n8n flow.
@@ -98,7 +101,7 @@ function buildUrl(tool: ToolDef, args: Record<string, any>, env: Env): string {
 async function callUpstream(tool: ToolDef, args: Record<string, any>, env: Env) {
   const url = buildUrl(tool, args, env);
   const send = async (token: string) => {
-    const headers: Record<string, string> = { Authorization: `Bearer ${token}`, Accept: "application/json" };
+    const headers: Record<string, string> = { Authorization: `Bearer ${token}`, Accept: "application/json", ...API_VERSION_HEADER };
     let body: string | undefined;
     if (tool.hasBody && args.body !== undefined) {
       body = JSON.stringify(args.body);
