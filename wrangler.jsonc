@@ -1,0 +1,13 @@
+{
+  "name": "infiterra-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": true,
+  "observability": { "enabled": true }
+  // Secrets (set with `wrangler secret put <NAME>`):
+  //   MCP_AUTH_TOKEN        shared bearer token MCP clients must send
+  //   INFITERRA_BASE_URL    e.g. https://<your-infiterra-host>  (no trailing slash)
+  //   INFITERRA_USERNAME    API user for the OAuth password grant
+  //   INFITERRA_PASSWORD
+  // Optional: INFITERRA_CLIENT_ID, INFITERRA_CLIENT_SECRET, INFITERRA_TOKEN_URL
+}
